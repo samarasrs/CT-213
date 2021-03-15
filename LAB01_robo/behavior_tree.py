@@ -183,61 +183,96 @@ class RoombaBehaviorTree(BehaviorTree):
     """
     def __init__(self):
         super().__init__()
-        # Todo: construct the tree here
+        self.root = SelectorNode("Root_Selector")
+        self.root.add_child(SequenceNode("Sequence1"))
+        self.root.add_child(SequenceNode("Sequence2"))
+        self.root.children[0].add_child(MoveForwardNode())
+        self.root.children[0].add_child(MoveInSpiralNode())
+        self.root.children[1].add_child(GoBackNode())
+        self.root.children[1].add_child(RotateNode())
 
 
 class MoveForwardNode(LeafNode):
     def __init__(self):
         super().__init__("MoveForward")
-        # Todo: add initialization code
+        self.cont_time = 0.0
 
     def enter(self, agent):
-        # Todo: add enter logic
-        pass
+        self.cont_time = 0.0
 
     def execute(self, agent):
-        # Todo: add execution logic
-        pass
+        if (self.cont_time * SAMPLE_TIME) > MOVE_FORWARD_TIME:
+            return ExecutionStatus.SUCCESS
+        elif agent.get_bumper_state():
+            return ExecutionStatus.FAILURE
+        else:
+            agent.set_velocity(FORWARD_SPEED, 0.0)
+            self.cont_time += 1
+            return ExecutionStatus.RUNNING
 
 
 class MoveInSpiralNode(LeafNode):
     def __init__(self):
         super().__init__("MoveInSpiral")
-        # Todo: add initialization code
+        self.cont_time = 0.0
+        self.radius = INITIAL_RADIUS_SPIRAL
+        self.angularSpeed = 0.0
 
     def enter(self, agent):
-        # Todo: add enter logic
-        pass
+        self.cont_time = 0.0
+        self.radius = INITIAL_RADIUS_SPIRAL
+        self.angularSpeed = 0.0
 
     def execute(self, agent):
-        # Todo: add execution logic
-        pass
+        if (self.cont_time * SAMPLE_TIME) > MOVE_IN_SPIRAL_TIME:
+            return ExecutionStatus.SUCCESS
+        elif agent.get_bumper_state():
+            return ExecutionStatus.FAILURE
+        else:
+            self.radius = INITIAL_RADIUS_SPIRAL + SPIRAL_FACTOR * self.cont_time * SAMPLE_TIME
+            self.angularSpeed = math.sqrt((FORWARD_SPEED ** 2 - SPIRAL_FACTOR ** 2) / self.radius ** 2)
+            agent.set_velocity(FORWARD_SPEED, self.angularSpeed)
+            self.cont_time += 1
+            return ExecutionStatus.RUNNING
 
 
 class GoBackNode(LeafNode):
     def __init__(self):
         super().__init__("GoBack")
-        # Todo: add initialization code
+        self.cont_time = 0.0
 
     def enter(self, agent):
-        # Todo: add enter logic
-        pass
+        self.cont_time = 0.0
 
     def execute(self, agent):
-        # Todo: add execution logic
-        pass
+        if (self.cont_time * SAMPLE_TIME) > GO_BACK_TIME:
+            return ExecutionStatus.SUCCESS
+        else:
+            agent.set_velocity(BACKWARD_SPEED, 0.0)
+            self.cont_time += 1
+            return ExecutionStatus.RUNNING
 
 
 class RotateNode(LeafNode):
     def __init__(self):
         super().__init__("Rotate")
-        # Todo: add initialization code
+        self.cont_time = 0.0
+        self.angle = 0.0
+        self.rotateTime = 0.0
 
     def enter(self, agent):
-        # Todo: add enter logic
-        pass
+        self.cont_time = 0.0
+        self.angle = random.uniform(-math.pi, math.pi)
+        self.rotateTime = abs(self.angle) / ANGULAR_SPEED
 
     def execute(self, agent):
-        # Todo: add execution logic
-        pass
+        if (self.cont_time * SAMPLE_TIME) > self.rotateTime:
+            return ExecutionStatus.SUCCESS
+        else:
+            if self.angle >= 0:
+                agent.set_velocity(0.0, ANGULAR_SPEED)
+            else:
+                agent.set_velocity(0.0, -ANGULAR_SPEED)
+            self.cont_time += 1
+            return ExecutionStatus.RUNNING
 
