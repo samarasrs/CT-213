@@ -48,5 +48,6 @@ def simulated_annealing(cost_function, random_neighbor, schedule, theta0, epsilo
         history.append(theta_aux)
         n += 1
         theta = theta_aux
+        cost = cost_function(theta)
 
     return theta, history

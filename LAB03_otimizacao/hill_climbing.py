@@ -43,5 +43,6 @@ def hill_climbing(cost_function, neighbors, theta0, epsilon, max_iterations):
             history.append(best)
             theta = best
         n += 1
+        cost = cost_function(theta)
 
     return theta, history
