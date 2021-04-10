@@ -150,7 +150,6 @@ class Simulation:
     def draw(self, window):
         """
         Draws the simulation (line follower robot and track).
-
         :param window: pygame's window where the drawing will occur.
         :type window: pygame's window.
         """
