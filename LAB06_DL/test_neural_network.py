@@ -51,8 +51,8 @@ plt.xlim([-5.0, 5.0])
 plt.ylim([-5.0, 5.0])
 plt.xlabel('x1')
 plt.ylabel('x2')
-plt.title('Dataset')
-plt.savefig('dataset.' + fig_format, format=fig_format)
+plt.title('Dataset (XOR)')
+plt.savefig('dataset(XOR).' + fig_format, format=fig_format)
 
 
 # Plotting the decision regions of the neural network

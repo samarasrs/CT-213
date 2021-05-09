@@ -93,7 +93,7 @@ class NeuralNetwork:
 
         m = inputs.shape[1]
 
-        delta[2] = (a[2] - expected_outputs)*sigmoid_derivative(z[2])
+        delta[2] = (a[2] - expected_outputs)
         weights_gradient[2] = (delta[2]@a[1].T) / m
         biases_gradient[2] = np.array(np.mean(delta[2], axis=1))
         biases_gradient[2] = biases_gradient[2].reshape(biases_gradient[2].shape[0], 1)
