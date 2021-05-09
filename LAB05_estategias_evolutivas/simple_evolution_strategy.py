@@ -54,5 +54,5 @@ class SimpleEvolutionStrategy:
             C = C + np.dot(aux.T, aux)
 
         self.C = 1/self.mu * C
-        self.m = np.median(best_samples, axis=0)
+        self.m = np.mean(best_samples, axis=0)
         self.samples = np.random.multivariate_normal(self.m, self.C, self.population_size)
