@@ -103,7 +103,6 @@ class NeuralNetwork:
         biases_gradient[1] = np.array(np.mean(delta[1], axis=1))
         biases_gradient[1] = biases_gradient[1].reshape(biases_gradient[1].shape[0], 1)
 
-
         return weights_gradient, biases_gradient
 
     def back_propagation(self, inputs, expected_outputs):
