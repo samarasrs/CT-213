@@ -89,7 +89,6 @@ class NeuralNetwork:
         biases_gradient = [None] * 3
         delta = [None] * 3
 
-
         z, a = self.forward_propagation(inputs)
 
         m = inputs.shape[1]
@@ -98,7 +97,6 @@ class NeuralNetwork:
         weights_gradient[2] = (delta[2]@a[1].T) / m
         biases_gradient[2] = np.array(np.mean(delta[2], axis=1))
         biases_gradient[2] = biases_gradient[2].reshape(biases_gradient[2].shape[0], 1)
-
 
         delta[1] = (self.weights[2].T@delta[2])*sigmoid_derivative(z[1])
         weights_gradient[1] = (delta[1] @ a[0].T) / m
