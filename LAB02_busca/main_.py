@@ -10,15 +10,19 @@ import time
 #algorithm = 'dijkstra'
 #algorithm = 'greedy'
 algorithm = 'a_star'
+#algorithm = 'a_star_weight'
+#algorithm = 'a_star_dynamic_weight'
+#algorithm = 'a_star_pxWU'
+#algorithm = 'a_star_pxWD'
 
 # Number of path plannings used in the Monte Carlo analysis
-num_iterations = 1
+#num_iterations = 1
 # num_iterations = 10
-# num_iterations = 100  # Monte Carlo
+num_iterations = 500  # Monte Carlo
 
 # Plot options
-save_fig = True  # if the figure will be used to the hard disk
-show_fig = True  # if the figure will be shown in the screen
+save_fig = False  # if the figure will be used to the hard disk
+show_fig = False  # if the figure will be shown in the screen
 fig_format = 'png'
 # Recommended figure formats: .eps for Latex/Linux, .svg for MS Office, and .png for easy visualization in Windows.
 # The quality of .eps and .svg is far superior since these are vector graphics formats.
@@ -75,7 +79,7 @@ NUM_OBSTACLES = 20
 cost_map = CostMap(WIDTH, HEIGHT)
 # Initializing the random seed so we have reproducible results
 # Please, do not change the seed
-random.seed(15)
+random.seed(16)
 # Create a random map
 cost_map.create_random_map(OBSTACLE_WIDTH, OBSTACLE_HEIGHT, NUM_OBSTACLES)
 # Create the path planner using the cost map
@@ -90,6 +94,9 @@ for i in range(num_iterations):
         # Trying to generate a new problem
         start_position = (random.randint(0, HEIGHT - 1), random.randint(0, WIDTH - 1))
         goal_position = (random.randint(0, HEIGHT - 1), random.randint(0, WIDTH - 1))
+
+        goal_position = (40, 100)
+
         # If the start or goal positions happen to be within an obstacle, we discard them and
         # try new samples
         if cost_map.is_occupied(start_position[0], start_position[1]):

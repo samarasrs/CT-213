@@ -142,3 +142,203 @@ class PathPlanner(object):
                         node_suc.f = cost
                         node_suc.parent = node
                         heapq.heappush(pq, (node_suc.f, node_suc))
+
+
+    def a_star_weight(self, start_position, goal_position):
+        """
+        Plans a path using A*.
+
+        :param start_position: position where the planning stars as a tuple (x, y).
+        :type start_position: tuple.
+        :param goal_position: goal position of the planning as a tuple (x, y).
+        :type goal_position: tuple.
+        :return: the path as a sequence of positions and the path cost.
+        :rtype: list of tuples and float.
+        """
+        # Todo: implement the A* algorithm
+        # The first return is the path as sequence of tuples (as returned by the method construct_path())
+        # The second return is the cost of the path
+
+        w = 5
+
+        self.node_grid.reset()
+        pq = []
+        node = self.node_grid.get_node(start_position[0], start_position[1])
+        goal_node = self.node_grid.get_node(goal_position[0], goal_position[1])
+        node.g = 0
+        node.f = node.distance_to(goal_position[0], goal_position[1])
+        heapq.heappush(pq, (node.f, node))
+        while len(pq) > 0:
+            f, node = heapq.heappop(pq)
+            node.closed = True
+            if node == goal_node:
+                return self.construct_path(goal_node), goal_node.f
+            for successor in self.node_grid.get_successors(node.i, node.j):
+                node_suc = self.node_grid.get_node(successor[0], successor[1])
+                if not node_suc.closed:
+                    h = node_suc.distance_to(goal_position[0], goal_position[1])
+                    cost = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j)) + w * h
+                    if node_suc.f > cost:
+                        node_suc.g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+                        node_suc.f = cost
+                        node_suc.parent = node
+                        heapq.heappush(pq, (node_suc.f, node_suc))
+
+    def a_star_dynamic_weight(self, start_position, goal_position):
+        """
+        Plans a path using A*.
+
+        :param start_position: position where the planning stars as a tuple (x, y).
+        :type start_position: tuple.
+        :param goal_position: goal position of the planning as a tuple (x, y).
+        :type goal_position: tuple.
+        :return: the path as a sequence of positions and the path cost.
+        :rtype: list of tuples and float.
+        """
+        # Todo: implement the A* algorithm
+        # The first return is the path as sequence of tuples (as returned by the method construct_path())
+        # The second return is the cost of the path
+
+
+
+        self.node_grid.reset()
+        pq = []
+        node = self.node_grid.get_node(start_position[0], start_position[1])
+        goal_node = self.node_grid.get_node(goal_position[0], goal_position[1])
+        node.g = 0
+
+        n = node.distance_to(goal_position[0], goal_position[1])
+
+        node.f = n
+        heapq.heappush(pq, (node.f, node))
+
+        e = 5
+
+
+        while len(pq) > 0:
+            f, node = heapq.heappop(pq)
+            node.closed = True
+            if node == goal_node:
+                return self.construct_path(goal_node), goal_node.f
+            for successor in self.node_grid.get_successors(node.i, node.j):
+                node_suc = self.node_grid.get_node(successor[0], successor[1])
+                if not node_suc.closed:
+                    h = node_suc.distance_to(goal_position[0], goal_position[1])
+
+                    d = h
+
+                    w = e * (1 - d / n)
+
+                    cost = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j)) + w * h
+                    if node_suc.f > cost:
+                        node_suc.g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+                        node_suc.f = cost
+                        node_suc.parent = node
+                        heapq.heappush(pq, (node_suc.f, node_suc))
+
+    def a_star_pxWU(self, start_position, goal_position):
+        """
+        Plans a path using A*.
+
+        :param start_position: position where the planning stars as a tuple (x, y).
+        :type start_position: tuple.
+        :param goal_position: goal position of the planning as a tuple (x, y).
+        :type goal_position: tuple.
+        :return: the path as a sequence of positions and the path cost.
+        :rtype: list of tuples and float.
+        """
+        # Todo: implement the A* algorithm
+        # The first return is the path as sequence of tuples (as returned by the method construct_path())
+        # The second return is the cost of the path
+
+        w = 2
+
+        self.node_grid.reset()
+        pq = []
+        node = self.node_grid.get_node(start_position[0], start_position[1])
+        goal_node = self.node_grid.get_node(goal_position[0], goal_position[1])
+        node.g = 0
+        n = node.distance_to(goal_position[0], goal_position[1])
+
+        node.f = n
+        heapq.heappush(pq, (node.f, node))
+
+        e = 5
+        while len(pq) > 0:
+            f, node = heapq.heappop(pq)
+            node.closed = True
+            if node == goal_node:
+                return self.construct_path(goal_node), goal_node.f
+            for successor in self.node_grid.get_successors(node.i, node.j):
+                node_suc = self.node_grid.get_node(successor[0], successor[1])
+                if not node_suc.closed:
+                    h = node_suc.distance_to(goal_position[0], goal_position[1])
+                    g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+
+                    d = h
+
+                    w = e * (1 - d / n)
+
+                    if g < ((2 * w - 1) * h):
+                        cost = g/(2 * w - 1) + h
+                    else:
+                        cost = (g + h) / w
+                    if node_suc.f > cost:
+                        node_suc.g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+                        node_suc.f = cost
+                        node_suc.parent = node
+                        heapq.heappush(pq, (node_suc.f, node_suc))
+
+    def a_star_pxWD(self, start_position, goal_position):
+        """
+        Plans a path using A*.
+
+        :param start_position: position where the planning stars as a tuple (x, y).
+        :type start_position: tuple.
+        :param goal_position: goal position of the planning as a tuple (x, y).
+        :type goal_position: tuple.
+        :return: the path as a sequence of positions and the path cost.
+        :rtype: list of tuples and float.
+        """
+        # Todo: implement the A* algorithm
+        # The first return is the path as sequence of tuples (as returned by the method construct_path())
+        # The second return is the cost of the path
+
+        w = 10
+
+        self.node_grid.reset()
+        pq = []
+        node = self.node_grid.get_node(start_position[0], start_position[1])
+        goal_node = self.node_grid.get_node(goal_position[0], goal_position[1])
+        node.g = 0
+        n = node.distance_to(goal_position[0], goal_position[1])
+
+        node.f = n
+        heapq.heappush(pq, (node.f, node))
+
+        e = 5
+        while len(pq) > 0:
+            f, node = heapq.heappop(pq)
+            node.closed = True
+            if node == goal_node:
+                return self.construct_path(goal_node), goal_node.f
+            for successor in self.node_grid.get_successors(node.i, node.j):
+                node_suc = self.node_grid.get_node(successor[0], successor[1])
+                if not node_suc.closed:
+                    h = node_suc.distance_to(goal_position[0], goal_position[1])
+                    g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+
+                    d = h
+
+                    w = e * (1 - d / n)
+
+                    if g < h:
+                        cost = g + h
+                    else:
+                        cost = (g + (2 * w - 1) * h) / w
+
+                    if node_suc.f > cost:
+                        node_suc.g = node.g + self.cost_map.get_edge_cost((node.i, node.j), (node_suc.i, node_suc.j))
+                        node_suc.f = cost
+                        node_suc.parent = node
+                        heapq.heappush(pq, (node_suc.f, node_suc))
